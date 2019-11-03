@@ -54,7 +54,7 @@ def timeUnitCount(timeOffset, key):
 
             if checkRanges(ranges) == False:
                 raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' ranges not valid")
-            
+
             if checkValidityOfTimeRanges(ranges, key) == False:
                 raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' ranges threshholds must be in " + str(start_limit) + " to " + str(end_limit))
 
@@ -67,15 +67,14 @@ def timeUnitCount(timeOffset, key):
                     start = start + 1
             return result
         elif timeOffset.find(",") != -1:
-            # Mention: We can have multiple minutes in a sequence, this is different to the range
-            # e.g. of valid sequence: 1, 15, 31
+            # Mention: We can have multiple times in a sequence, this is different to the range
             times = timeOffset.split(",")
-            
+
             # Check for numeric values
             if checkIfNumeric(times) == False:
                 raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' argument must be numeric only")
 
-            # Check if minute are in range 0-59
+            # Check if times are in range limits
             if checkIfInTimesRange(times, key) == False:
                 raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' " + key + " is not in " + start_limit + " to " + + end_limit)
 
@@ -84,8 +83,8 @@ def timeUnitCount(timeOffset, key):
                 result = result + time + " "
             return result
 
-        elif timeOffset.find("-") != -1: 
-            # if we want to specify multiple minutes using the hyphen
+        elif timeOffset.find("-") != -1:
+            # if we want to specify multiple times using the hyphen
             times = timeOffset.split("-")
 
             # Check if range is not used incorrectly: it can only specify 2 limits, start and end.
@@ -95,15 +94,15 @@ def timeUnitCount(timeOffset, key):
             # Check for numeric values
             if checkIfNumeric(times) == False:
                 raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' argument must be numeric only")
-            
+
             start = int(times[0])
             end = int(times[1])
 
             # Check for valid bounds
             if start < start_limit or start > end_limit:
-                raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' invalid start minute '" + str(start) + "' for range")
+                raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' invalid start time '" + str(start) + "' for range")
             if end < start_limit or end > end_limit:
-                raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' invalid end minute '" + str(end) + "' for range")
+                raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' invalid end time '" + str(end) + "' for range")
             if start > end:
                 raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' start " + key + " is greater than end " + key + " '" + str(end) + "' for range")
 
@@ -112,9 +111,9 @@ def timeUnitCount(timeOffset, key):
                 result = result + str(start) + " "
                 start = start + 1
             return result
-        # If we get here means that either 'minutes' is only one minutes without additional quantifiers 
-        # or 
-        # 'minutes' is not numeric and it also doesn't have quantifiers(so it wasn't picked up earlier)
+        # If we get here means that either 'times' is only one time without additional quantifiers
+        # or
+        # 'times' is not numeric and it also doesn't have quantifiers(so it wasn't picked up earlier)
         elif timeOffset.isnumeric() == False:
             raise ValueError("Illegal Arguments for param " + key + " '" + timeOffset + "' must be numeric only, or range(-) or sequence(,)")
         else:
